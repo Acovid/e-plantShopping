@@ -45,7 +45,7 @@ const CartItem = ({ onContinueShopping }) => {
     // TO DO: update cart icon with new quantity
     // updateCart(incrementedQuantity)
     // TO DO: update the number of that plant type
-    updateNoOfPlants(incrementedQuantity)
+    // updateNoOfPlants(incrementedQuantity)
     // TO DO: update the subtotal
     updateSubtotal(incrementedQuantity)
     // TO DO: update the total cost
@@ -111,9 +111,18 @@ const CartItem = ({ onContinueShopping }) => {
     return totalCost
   }
 
+  let noOfCartItems = 0
+  const showNoOfCartItems = items => {
+    noOfCartItems = items
+    console.log("Number of items:", items)
+  }
+
+  // console.log("showNoOfCartItems:", noOfCartItems + item.quantity)
+
   return (
     <div className="cart-container">
       <h2 style={{ color: "black" }}>Total Cart Amount: ${calculateTotalAmount()}</h2>
+      {/* {noOfCartItems()} */}
       <div>
         {cart.map(item => (
           <div className="cart-item" key={item.name}>
@@ -126,6 +135,8 @@ const CartItem = ({ onContinueShopping }) => {
                   -
                 </button>
                 <span className="cart-item-quantity-value">{item.quantity}</span>
+                {/* {(noOfCartItems = noOfCartItems + item.quantity)} */}
+                {showNoOfCartItems(noOfCartItems + item.quantity)}
                 <button className="cart-item-button cart-item-button-inc" onClick={() => handleIncrement(item)}>
                   +
                 </button>
