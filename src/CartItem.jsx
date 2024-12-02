@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { removeItem, updateQuantity } from "./CartSlice"
+import { addItem, removeItem, updateQuantity, decreaseQuantity } from "./CartSlice"
 import "./CartItem.css"
 import ProductList from "./ProductList"
 
@@ -15,9 +15,14 @@ const CartItem = ({ onContinueShopping }) => {
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
     let totalAmount = 0
+    let cost = 0
+    // console.log("Iterating through cart...")
     cart.forEach(item => {
-      totalAmount += item.cost * item.quantity
+      // remove dollar sign from cost
+      cost = item.cost.substring(1)
+      totalAmount += cost * item.quantity
     })
+
     return totalAmount
   }
 
@@ -25,38 +30,84 @@ const CartItem = ({ onContinueShopping }) => {
     e.preventDefault()
     setShowPlants(true) // Set showAboutUs to true when "About Us" link is clicked
     setShowCart(false) // Hide the cart when navigating to About Us
-    // console.log("showCart: ", showCart)
-    // console.log("showPlants", showPlants)
     onContinueShopping(e)
   }
 
-  const handleCheckoutShopping = e => {
+  const handleCheckoutShopping = () => {
     alert("Functionality to be added for future reference")
   }
 
   const handleIncrement = item => {
-    console.log(item.quantity)
-    dispatch(updateQuantity(item.quantity + 1))
-    console.log(item.quantity)
+    dispatch(addItem(item))
+    // console.log("Quantity before increment: ", item.quantity)
+    let incrementedQuantity = item.quantity + 1
+    // dispatch(updateQuantity(item.name, incrementedQuantity))
+    // TO DO: update cart icon with new quantity
+    // updateCart(incrementedQuantity)
+    // TO DO: update the number of that plant type
+    updateNoOfPlants(incrementedQuantity)
+    // TO DO: update the subtotal
+    updateSubtotal(incrementedQuantity)
+    // TO DO: update the total cost
+    updateTotalCost(incrementedQuantity)
   }
 
   const handleDecrement = item => {
-    if (item.quantity > 2) {
-      dispatch(updateQuantity(item.quantity - 1))
+    // dispatch(removeItem(item))
+    console.log("Quantity before decrement: ", item.quantity)
+    if (item.quantity > 0) {
+      let decrementedQuantity = item.quantity - 1
+      console.log("item.name:", item.name)
+      console.log("item.quantity:", item.quantity)
+      console.log(" decremented quantity:", decrementedQuantity)
+      dispatch(decreaseQuantity(item))
+      // TO DO: update cart icon with new quantity
+      updateCart(decrementedQuantity)
+      // TO DO: update the number of that plant type
+      updateNoOfPlants(decrementedQuantity)
+      // TO DO: update the subtotal
+      updateSubtotal(decrementedQuantity)
+      // TO DO: update the total cost
+      updateTotalCost(decrementedQuantity)
     } else {
+      console.log("Removing item:", item.name)
       dispatch(removeItem(item))
     }
   }
 
   const handleRemove = item => {
-    dispatch(removeItem(item))
+    console.log("Removing item: ", item)
+    console.log("Cart after removal:", cart)
+
+    dispatch(removeItem(item.name))
+    // Implement an event handler to remove the item from the cart.
   }
+
+  // BLOCK: MY FUNCTIONS
+  // 1. update cart icon with new quantity
+  function updateCart(newQuantity) {
+    console.log("Updating cart with new quantity: ", newQuantity)
+  }
+  // 2. update the number of that plant type
+  function updateNoOfPlants(newQuantity) {
+    console.log("Updating number of plant types with new quantity: ", newQuantity)
+  }
+  // 3. update the subtotal
+  function updateSubtotal(newQuantity) {
+    console.log("Updating subtotal: ", newQuantity)
+  }
+  // 4. update the total cost
+  function updateTotalCost(newQuantity) {
+    console.log("Updating total cost: ", newQuantity)
+  }
+  // END BLOCK: MY FUNCTIONS
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = item => {
-    let totalCost = item.cost * item.quantity
-    console.log(totalCost)
-
+    const cost = item.cost.substring(1)
+    const totalCost = cost * item.quantity
+    // totalCost = item.cost * item.quantity
+    console.log(`Total cost of ${item.name} in the cart: ${totalCost}`)
     return totalCost
   }
 
